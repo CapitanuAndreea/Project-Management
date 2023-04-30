@@ -270,3 +270,202 @@ double Proiect::Calculare_Feedback_Proiect()
     medie = double(medie / dim);
     return medie;
 }
+
+
+///Sponsor
+Sponsor::Sponsor()
+{
+    strcpy(nume, "Unknown");
+    suma = 0;
+}
+
+Sponsor::Sponsor(char Nume[], int Suma)
+{
+    strcpy(nume, Nume);
+    suma = Suma;
+}
+
+
+///Contribuitor
+int Contribuitor::finantare_minima = 1000;
+
+Contribuitor::Contribuitor()
+{
+    finantare_minima = 1000;
+    strcpy(nume, "Unknown");
+    suma = 0;
+    badge = 0;
+}
+
+Contribuitor::Contribuitor(char Nume[], int Suma)
+{
+    strcpy(nume, Nume);
+    suma = Suma;
+    if(Oferire_Badge(suma) == 1)
+        badge = 1;
+    else
+        badge = 0;
+}
+
+string Contribuitor::Get_Role()
+{
+    return "Contribuitor";
+}
+
+void Contribuitor::Afisare()
+{
+    cout << Get_Role() << ": " << nume;
+    if(badge == 1)
+        cout << ", Badge: Special\n";
+    else if(badge == 0)
+        cout << "\n";
+}
+
+void Contribuitor::Verificare1(int Suma)
+{
+    try
+    {
+        if(Suma < 0)
+            throw Finantare_Negativa();
+        if(Suma < finantare_minima)
+            throw Finantare_Minima();
+    }
+    catch(Finantare_Negativa e)
+    {
+        cout << e.what();
+        throw;
+    }
+}
+
+void Contribuitor::Verificare(int Suma)
+{
+    try
+    {
+        Verificare1(Suma);
+    }
+    catch(Finantare_Minima e)
+    {
+        Finantare_Minima *bp;
+        bp = dynamic_cast<Finantare_Minima*>(&e);
+        cout << bp->what();
+    }
+}
+
+///Premium
+int Premium::finantare_minima = 3000;
+
+Premium::Premium()
+{
+    strcpy(nume, "Unknown");
+    strcpy(tematica_proiect, "Unknown");
+    suma = 0;
+    badge = 0;
+}
+
+Premium::Premium(char Nume[], int Suma, char Tematica_proiect[])
+{
+    strcpy(nume, Nume);
+    strcpy(tematica_proiect, Tematica_proiect);
+    suma = Suma;
+    if(Oferire_Badge(suma) == 1)
+        badge = 1;
+    else
+        badge = 0;
+}
+
+string Premium::Get_Role()
+{
+    return "Premium";
+}
+
+void Premium::Afisare()
+{
+    cout << Get_Role() << ": " << nume;
+    if(badge == 1)
+        cout << ", Badge: Special\n";
+    else if(badge == 0)
+        cout << "\n";
+}
+
+void Premium::Verificare1(int Suma)
+{
+    try
+    {
+        if(Suma < 0)
+            throw Finantare_Negativa();
+        if(Suma < finantare_minima)
+            throw Finantare_Minima();
+    }
+    catch(Finantare_Negativa e)
+    {
+        cout << e.what();
+        throw;
+    }
+}
+
+void Premium::Verificare(int Suma)
+{
+    try
+    {
+        Verificare1(Suma);
+    }
+    catch(Finantare_Minima e)
+    {
+        Finantare_Minima *bp;
+        bp = dynamic_cast<Finantare_Minima*>(&e);
+        cout << bp->what();
+    }
+}
+
+///Asociatie
+Asociatie::Asociatie()
+: nume("Unknown"), descriere("Unknown")
+{
+
+}
+
+Asociatie::Asociatie(string Nume, string Descriere)
+: nume(Nume), descriere(Descriere)
+{
+
+}
+
+string Asociatie::Tip_Beneficiar()
+{
+    return "Asociatie";
+}
+
+void Asociatie::Afisare_Cauza()
+{
+    cout << Tip_Beneficiar() << ": " << nume << "\nPoveste: " << descriere << "\n";
+}
+
+///Pers_Fizica
+Pers_Fizica::Pers_Fizica()
+{
+    strcpy(nume, "Unknown");
+    p = new char[50];
+    strcpy(p, "Unknown");
+}
+
+Pers_Fizica::Pers_Fizica(char Nume[], char *P)
+{
+    strcpy(nume, Nume);
+    p = new char[50];
+    strcpy(p, P);
+}
+
+string Pers_Fizica::Tip_Beneficiar()
+{
+    return "Persoana Fizica";
+}
+
+void Pers_Fizica::Afisare_Cauza()
+{
+    cout << Tip_Beneficiar() << ": " << nume << "\nPoveste: " << p << "\n";
+}
+
+Pers_Fizica::~Pers_Fizica()
+{
+    delete[] p;
+}
