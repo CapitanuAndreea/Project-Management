@@ -1,4 +1,7 @@
 #include <iostream>
+#include <string>
+#include <cstring>
+#include <cmath>
 
 using namespace std;
 
@@ -17,6 +20,26 @@ public:
     const Array &operator=(const Array &other);
     friend istream& operator>>(istream& Cin, Array &x);
     friend ostream& operator<<(ostream& Cout, Array &x);
+};
+
+
+class Finantare_Minima : public exception
+{
+public:
+    const char *what() const throw()
+    {
+        return "Sponsorul nu poate oferi mai putin decat finantarea minima!\n";
+    }
+};
+
+
+class Finantare_Negativa : public Finantare_Minima
+{
+public:
+      const char *what() const throw()
+      {
+          return "Finantarea nu poate fi un nr. negativ!\n";
+      }
 };
 
 
@@ -84,4 +107,108 @@ public:
     Proiect(Angajat Echipa[], int size_Echipa, Necesitati necesitatile[], int size_necesitatile, Task Taskuri[], int size_Taskuri);
     double Calculare_Buget_Necesar();
     double Calculare_Feedback_Proiect();
+};
+
+
+class Sponsor
+{
+protected:
+    char nume[50];
+    int suma;
+protected:
+    virtual string Get_Role()
+    {
+        return "Sponsor";
+    }
+public:
+    Sponsor();
+    Sponsor(char Nume[], int Suma);
+    virtual void Afisare()
+    {
+        cout << Get_Role() << ": " << nume << "\n";
+    }
+};
+
+
+class Contribuitor : public Sponsor
+{
+private:
+  int badge;
+  static int finantare_minima;
+public:
+    Contribuitor();
+    Contribuitor(char Nume[], int Suma);
+    string Get_Role() override;
+    void Afisare() override;
+    static int Oferire_Badge(int Suma)
+    {
+        if(Suma >= finantare_minima * 2)
+            return 1;
+        else
+            return 0;
+    };
+    void Verificare1(int Suma);
+    void Verificare(int Suma);
+};
+
+
+class Premium : public Sponsor
+{
+private:
+  static int finantare_minima;
+  int badge;
+  char tematica_proiect[50];
+public:
+    Premium();
+    Premium(char Nume[], int Suma, char Tematica_proiect[]);
+    string Get_Role() override;
+    void Afisare() override;
+    static int Oferire_Badge(int Suma)
+    {
+        if(Suma >= finantare_minima * 2)
+            return 1;
+        else
+            return 0;
+    };
+    void Verificare1(int Suma);
+    void Verificare(int Suma);
+};
+
+
+class Cauza
+{
+public:
+    virtual string Tip_Beneficiar() = 0;
+    virtual void Afisare_Cauza() = 0;
+    virtual ~Cauza()
+    {
+
+    }
+};
+
+
+class Asociatie : private Cauza
+{
+private:
+    string nume;
+    string descriere;
+public:
+    Asociatie();
+    Asociatie(string Nume, string Descriere);
+    string Tip_Beneficiar() override;
+    void Afisare_Cauza() override;
+};
+
+
+class Pers_Fizica : private Cauza
+{
+private:
+    char nume[50];
+    char *p;
+public:
+    Pers_Fizica();
+    Pers_Fizica(char Nume[], char *P);
+    string Tip_Beneficiar() override;
+    void Afisare_Cauza() override;
+    ~Pers_Fizica();
 };
