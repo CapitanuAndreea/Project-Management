@@ -6,14 +6,62 @@
 using namespace std;
 
 void Testare_Functionalitati();
+void Testare_Functionalitati1();
 void Meniu_Interactiv();
 
 int main()
 {
     ///Testare_Functionalitati();
-    Meniu_Interactiv();
+    ///Meniu_Interactiv();
+    Testare_Functionalitati1();
 
     return 0;
+}
+
+void Testare_Functionalitati1()
+{
+    Sponsor f;
+    f.Afisare();
+
+    Sponsor g("Sunshine", 1200);
+    g.Afisare();
+    cout << "\n";
+
+    Contribuitor h;
+    Sponsor *e = &h;
+    e->Afisare();
+
+    Contribuitor i("Catena", 2007);
+    Sponsor *x = &i;
+    x->Afisare();
+    i.Verificare(987);
+    cout << "\n";
+
+    Premium j;
+    Sponsor *y = &j;
+    y->Afisare();
+
+    Premium k("Lidl", 6008, "AI");
+    Sponsor *z = &k;
+    z->Afisare();
+    cout << "\n";
+
+    Asociatie a;
+    Asociatie *l = &a;
+    l->Afisare_Cauza();
+
+    Asociatie b("Prichindeii", "Incercam sa le aratam fericirea vietii copiilor defavorizati.");
+    Asociatie *m = &b;
+    m->Afisare_Cauza();
+    cout << "\n";
+
+    Pers_Fizica c;
+    Pers_Fizica *n = &c;
+    n->Afisare_Cauza();
+
+    Pers_Fizica d("Ana", "Vrea sa-si continue studiile.");
+    Pers_Fizica *o = &d;
+    o->Afisare_Cauza();
 }
 
 void Testare_Functionalitati()
