@@ -1,6 +1,10 @@
 #include <iostream>
+#include <vector>
+#include <string>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
+#include <memory>
 #include "Project.h"
 
 using namespace std;
@@ -11,9 +15,9 @@ void Meniu_Interactiv();
 
 int main()
 {
-    ///Testare_Functionalitati();
-    ///Meniu_Interactiv();
+    Testare_Functionalitati();
     Testare_Functionalitati1();
+    ///Meniu_Interactiv();
 
     return 0;
 }
@@ -73,9 +77,9 @@ void Testare_Functionalitati()
     y.Schimbare_Departament("Mecanica");
     cout << y << "\n";
     x = y; ///Supraincarcare "="
-    cout << x << "\n";
+    cout << x;
     y.Calculare_Salariu();
-    cout << "\n";
+    cout << "\n\n";
 
     Necesitati a;
     cout << a << "\n";
@@ -96,7 +100,7 @@ void Testare_Functionalitati()
     cout << c << "\n";
 
     Angajat echipa[2];
-    Angajat z("Arthur", 2020, "Management");
+    Angajat z("Arthur", 2020, "HR");
     echipa[0] = y;
     echipa[1] = z;
 
@@ -111,6 +115,7 @@ void Testare_Functionalitati()
     Proiect proiect(echipa, 2, necesitati, 2, taskuri, 1);
     cout << proiect.Calculare_Buget_Necesar() << "\n";
     cout << proiect.Calculare_Feedback_Proiect() << "\n";
+    proiect.Exista_Reprezentant("Management");
 }
 
 void Meniu_Interactiv()
@@ -212,7 +217,9 @@ void Meniu_Interactiv()
                 cout << "Numar angajat: ";
                 cin >> nr_angajat;
                 cout << echipa[nr_angajat - 1] << "\n";
-                cout << "Salariu: " << echipa[nr_angajat - 1].Calculare_Salariu() << "\n";
+                cout << "Salariu: ";
+                echipa[nr_angajat - 1].Calculare_Salariu();
+                cout << "\n";
                 break;
             case 4:
                 cout << "Numar task: ";
