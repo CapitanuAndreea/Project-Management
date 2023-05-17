@@ -1,49 +1,60 @@
 #include <iostream>
+#include <vector>
+#include <string>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
+#include <memory>
 #include "Project.h"
 
 using namespace std;
 
 ///Array
-Array::Array()
+template <typename type>
+Array<type>::Array()
 {
     dimensiune = 0;
     ptr = nullptr;
 }
 
-Array::Array(int Size)
+template <typename type>
+Array<type>::Array(int Size)
 {
     dimensiune = Size;
-    ptr = new int[dimensiune];
+    ptr = new type[dimensiune];
     for(int i = 0; i < dimensiune; i++)
         ptr[i] = 0;
 }
 
-Array::Array(const Array &array_de_copiat)
+template <typename type>
+Array<type>::Array(const Array &array_de_copiat)
 {
     dimensiune = array_de_copiat.dimensiune;
-    ptr = new int[dimensiune];
+    ptr = new type[dimensiune];
     for(int i = 0; i < dimensiune; i++)
         ptr[i] = array_de_copiat.ptr[i];
 }
 
-Array::~Array()
+template <typename type>
+Array<type>::~Array()
 {
     delete[] ptr;
 }
 
-int Array::Get_Size()const
+template <typename type>
+int Array<type>::Get_Size()const
 {
     return dimensiune;
 }
 
-int *Array::Get_Ptr()
+template <typename type>
+int *Array<type>::Get_Ptr()
 {
     return ptr;
 }
 
-const Array &Array::operator=(const Array &other)
+template <typename type>
+const Array<type> &Array<type>::operator=(const Array<type> &other)
 {
     delete[] ptr;
     dimensiune = other.dimensiune;
@@ -53,14 +64,25 @@ const Array &Array::operator=(const Array &other)
     return *this;
 }
 
-istream &operator>>(istream &Cin, Array &x)
+template <typename type>
+void Array<type>::Citire()
+{
+    for(int i = 0; i < dimensiune; i++)
+        cin >> ptr[i];
+}
+
+/**template <typename type> class Array;
+template <typename type>
+istream &operator>>(istream &Cin, Array<type> &x)
 {
     for(int i = 0; i < x.dimensiune; i++)
         Cin >> x.ptr[i];
     return Cin;
-}
+}*/
 
-ostream &operator<<(ostream &Cout, Array &x)
+template <typename type> class Array;
+template <typename type>
+ostream &operator<<(ostream &Cout, Array<type> &x)
 {
     for(int i = 0; i < x.dimensiune; i++)
         Cout << x.ptr[i];
@@ -74,59 +96,60 @@ Angajat::Angajat()
 {
     strcpy(nume, "Unknown");
     an_angajare = 0;
-    strcpy(departament, "Unknown");
+    departament = "Unknown";
 }
 
-Angajat::Angajat(char Nume[], int An_angajare, char Departament[])
+Angajat::Angajat(char Nume[], int An_angajare, string Departament)
 {
     strcpy(nume, Nume);
     an_angajare = An_angajare;
-    strcpy(departament, Departament);
+    departament = Departament;
 }
 
-double Angajat::Adaugare_Bonus(int bonus)
+template <typename Type>
+Type Angajat::Adaugare_Bonus(Type bonus)
 {
-    double salariu = 4000;
-    salariu += 200;
+    Type salariu = 4000;
+    if(bonus > 0 && bonus < 1)
+        salariu += salariu * bonus;
+    else
+        salariu += bonus;
     return salariu;
 }
 
-double Angajat::Adaugare_Bonus(double bonus)
-{
-    double salariu = 4000;
-    salariu += salariu * bonus;
-    return salariu;
-}
-
-double Angajat::Calculare_Salariu()
+void Angajat::Calculare_Salariu()
 {
     int an_actual = 2023;
     if(an_angajare == 0)
-        cout << Adaugare_Bonus(0);
+        cout << Adaugare_Bonus<int>((int)0);
     else
     {
         if(an_actual - an_angajare <= 1)
-            cout << Adaugare_Bonus(200);
+            cout << Adaugare_Bonus<int>((int)200);
         else if(an_actual - an_angajare >= 10)
-            cout << Adaugare_Bonus(0.3);
+            cout << Adaugare_Bonus<double>((double)0.3);
         else if(an_actual - an_angajare >= 5)
-            cout << Adaugare_Bonus(0.2);
+            cout << Adaugare_Bonus<double>((double)0.2);
         else
-            cout << Adaugare_Bonus(0);
+            cout << Adaugare_Bonus<int>((int)0);
     }
-
 }
 
 void Angajat::operator=(const Angajat& angajatul)
 {
     strcpy(nume, angajatul.nume);
     an_angajare = angajatul.an_angajare;
-    strcpy(departament, angajatul.departament);
+    departament = angajatul.departament;
 }
 
-void Angajat::Schimbare_Departament(char Departament[])
+string Angajat::Get_Department()
 {
-    strcpy(departament, Departament);
+    return departament;
+}
+
+void Angajat::Schimbare_Departament(string Departament)
+{
+    departament = Departament;
 }
 
 ostream& operator<<(ostream& Cout, Angajat x)
@@ -237,17 +260,28 @@ void Necesitati::operator=(const Necesitati& necesitatile)
 ///Proiect
 Proiect::Proiect(Angajat Echipa[], int size_Echipa, Necesitati necesitatile[], int size_necesitatile, Task Taskuri[], int size_Taskuri)
 {
-    size_echipa = size_Echipa;
     size_necesitati = size_necesitatile;
     size_taskuri = size_Taskuri;
     for(int i = 0; i < size_Echipa; i++)
-        echipa[i] = Echipa[i];
+        echipa.push_back(Echipa[i]);
     for(int i = 0; i < size_necesitatile; i++)
         necesitati[i] = necesitatile[i];
     for(int i = 0; i < size_Taskuri; i++)
         taskuri[i] = Taskuri[i];
-    Array other(size_Echipa);
+    Array<int> other(size_Echipa);
     feedback = other;
+}
+
+void Proiect::Exista_Reprezentant(string Departament)
+{
+    vector<Angajat>::iterator i;
+    i = find_if(echipa.begin(), echipa.end(),
+                [&dep = Departament]
+                (Angajat& ang) -> bool {return ang.Get_Department() == dep;});
+    if(i != echipa.end())
+        cout << "Exista reprezentant " << Departament << " in aceasta echipa de lucru.\n";
+    else
+        cout << "Nu exista reprezentanti " << Departament << " in aceasta echipa de lucru!\n";
 }
 
 double Proiect::Calculare_Buget_Necesar()
@@ -264,7 +298,7 @@ double Proiect::Calculare_Feedback_Proiect()
     int dim = feedback.Get_Size();
     int *p = feedback.Get_Ptr();
     cout << "Introduceti feedbackul fiecarui angajat: ";
-    cin >> feedback;
+    feedback.Citire();
     for(int i = 0; i < dim; i++)
         medie += p[i];
     medie = double(medie / dim);
@@ -444,15 +478,18 @@ void Asociatie::Afisare_Cauza()
 Pers_Fizica::Pers_Fizica()
 {
     strcpy(nume, "Unknown");
-    p = new char[50];
-    strcpy(p, "Unknown");
+    p = make_unique<char[]>(50);
+    char text[] = "Unknown";
+    for(int i = 0; text[i]; i++)
+        p[i] = text[i];
 }
 
 Pers_Fizica::Pers_Fizica(char Nume[], char *P)
 {
     strcpy(nume, Nume);
-    p = new char[50];
-    strcpy(p, P);
+    p = make_unique<char[]>(50);
+    for(int i = 0; P[i]; i++)
+        p[i] = P[i];
 }
 
 string Pers_Fizica::Tip_Beneficiar()
@@ -462,10 +499,5 @@ string Pers_Fizica::Tip_Beneficiar()
 
 void Pers_Fizica::Afisare_Cauza()
 {
-    cout << Tip_Beneficiar() << ": " << nume << "\nPoveste: " << p << "\n";
-}
-
-Pers_Fizica::~Pers_Fizica()
-{
-    delete[] p;
+    cout << Tip_Beneficiar() << ": " << nume << "\nPoveste: " << p.get() << "\n";
 }
