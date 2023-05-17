@@ -1,10 +1,14 @@
 #include <iostream>
+#include <vector>
 #include <string>
 #include <cstring>
 #include <cmath>
+#include <algorithm>
+#include <memory>
 
 using namespace std;
 
+template <typename type>
 class Array
 {
 private:
@@ -18,8 +22,9 @@ public:
     int Get_Size() const;
     int* Get_Ptr();
     const Array &operator=(const Array &other);
-    friend istream& operator>>(istream& Cin, Array &x);
-    friend ostream& operator<<(ostream& Cout, Array &x);
+    void Citire();
+    ///friend istream& operator>>(istream& Cin, Array<type> &x);
+    friend ostream& operator<<(ostream& Cout, Array<type> &x);
 };
 
 
@@ -48,16 +53,17 @@ class Angajat
 private:
     char nume[50];
     int an_angajare;
-    char departament[50];
+    string departament;
 public:
     Angajat();
-    Angajat(char Nume[], int An_angajare, char Departament[]);
+    Angajat(char Nume[], int An_angajare, string Departament);
     friend ostream& operator<<(ostream& Cout, Angajat x);
-    void Schimbare_Departament(char Departament[]);
+    string Get_Department();
+    void Schimbare_Departament(string Departament);
     void operator=(const Angajat& angajatul);
-    double Calculare_Salariu();
-    double Adaugare_Bonus(int bonus);
-    double Adaugare_Bonus(double bonus);
+    void Calculare_Salariu();
+    template <typename Type>
+    Type Adaugare_Bonus(Type bonus);
 };
 
 
@@ -96,15 +102,15 @@ public:
 class Proiect
 {
 private:
-    Angajat echipa[50];
+    vector<Angajat> echipa;
     Necesitati necesitati[50];
     Task taskuri[50];
-    Array feedback;
-    int size_echipa;
+    Array<int> feedback;
     int size_necesitati;
     int size_taskuri;
 public:
     Proiect(Angajat Echipa[], int size_Echipa, Necesitati necesitatile[], int size_necesitatile, Task Taskuri[], int size_Taskuri);
+    void Exista_Reprezentant(string Departament);
     double Calculare_Buget_Necesar();
     double Calculare_Feedback_Proiect();
 };
@@ -204,11 +210,10 @@ class Pers_Fizica : private Cauza
 {
 private:
     char nume[50];
-    char *p;
+    unique_ptr<char[]> p;
 public:
     Pers_Fizica();
     Pers_Fizica(char Nume[], char *P);
     string Tip_Beneficiar() override;
     void Afisare_Cauza() override;
-    ~Pers_Fizica();
 };
