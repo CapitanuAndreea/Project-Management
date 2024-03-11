@@ -13,19 +13,100 @@ class Array
 {
 private:
     int dimensiune;
-    int *ptr;
+    type *ptr;
 public:
     Array();
     Array(int Size);
     Array(const Array &array_de_copiat);
     ~Array();
     int Get_Size() const;
-    int* Get_Ptr();
+    type* Get_Ptr();
     const Array &operator=(const Array &other);
     void Citire();
     ///friend istream& operator>>(istream& Cin, Array<type> &x);
     friend ostream& operator<<(ostream& Cout, Array<type> &x);
 };
+
+///Array
+template <typename type>
+Array<type>::Array()
+{
+    dimensiune = 0;
+    ptr = nullptr;
+}
+
+template <typename type>
+Array<type>::Array(int Size)
+{
+    dimensiune = Size;
+    ptr = new type[dimensiune];
+    for (int i = 0; i < dimensiune; i++)
+        ptr[i] = 0;
+}
+
+template <typename type>
+Array<type>::Array(const Array& array_de_copiat)
+{
+    dimensiune = array_de_copiat.dimensiune;
+    ptr = new type[dimensiune];
+    for (int i = 0; i < dimensiune; i++)
+        ptr[i] = array_de_copiat.ptr[i];
+}
+
+template <typename type>
+Array<type>::~Array()
+{
+    delete[] ptr;
+}
+
+template <typename type>
+int Array<type>::Get_Size()const
+{
+    return dimensiune;
+}
+
+template <typename type>
+type* Array<type>::Get_Ptr()
+{
+    return ptr;
+}
+
+template <typename type>
+const Array<type>& Array<type>::operator=(const Array<type>& other)
+{
+    delete[] ptr;
+    dimensiune = other.dimensiune;
+    ptr = new type[dimensiune];
+    for (int i = 0; i < dimensiune; i++)
+        ptr[i] = other.ptr[i];
+    return *this;
+}
+
+template <typename type>
+void Array<type>::Citire()
+{
+    for (int i = 0; i < dimensiune; i++)
+        cin >> ptr[i];
+}
+
+/**template <typename type> class Array;
+template <typename type>
+istream &operator>>(istream &Cin, Array<type> &x)
+{
+    for(int i = 0; i < x.dimensiune; i++)
+        Cin >> x.ptr[i];
+    return Cin;
+}*/
+
+template <typename type> class Array;
+template <typename type>
+ostream& operator<<(ostream& Cout, Array<type>& x)
+{
+    for (int i = 0; i < x.dimensiune; i++)
+        Cout << x.ptr[i];
+    Cout << "\n";
+    return Cout;
+}
 
 
 class Finantare_Minima : public exception
